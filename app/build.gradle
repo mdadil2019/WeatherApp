@@ -17,9 +17,6 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    dataBinding{
-        enabled = true
-    }
 
     buildTypes {
         release {
@@ -58,6 +55,7 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:2.7.1"
     implementation "com.squareup.okhttp3:okhttp:4.1.0"
     implementation "com.squareup.okhttp3:logging-interceptor:4.1.0"
+    implementation "com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0"
 
     //Room
     implementation "androidx.room:room-runtime:$room_version"
