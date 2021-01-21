@@ -54,9 +54,9 @@ class LocationManager(private val context: Context) {
     }
 
     fun findLocationName(location : Location){
-        geoCoder.getFromLocation(location.latitude,location.longitude,2).apply {
-            listener.get()?.onLocationNameFound(this.first().locality)
-        }
+//        geoCoder.getFromLocation(location.latitude,location.longitude,2).apply {
+//            listener.get()?.onLocationNameFound(this.first().locality)
+//        }
     }
 
 }

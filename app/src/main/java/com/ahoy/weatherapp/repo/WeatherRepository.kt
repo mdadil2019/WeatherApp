@@ -57,7 +57,9 @@ class WeatherRepository(
 
     fun getCurrentWeather(onSuccess: (WeatherResponse) -> Unit) {
         db.currentWeatherDao().getCurrentWeather().observe(lifecycleOwner, Observer {
-            onSuccess(it)
+            if(it != null){
+                onSuccess(it)
+            }
         })
     }
 

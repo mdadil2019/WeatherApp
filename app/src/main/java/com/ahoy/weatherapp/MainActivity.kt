@@ -7,62 +7,22 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
+import com.ahoy.weatherapp.fragments.HomeFragment
+import com.ahoy.weatherapp.fragments.LocationPermissionFragment
 import timber.log.Timber
 
-class MainActivity : AppCompatActivity(), LocationListener {
-    var locationManager: LocationManager? = null
-
-    companion object {
-        private val LOCATION_PERMISSION_RC = 1
-    }
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Timber.plant(Timber.DebugTree())
-        locationManager = LocationManager(this)
-        locationManager?.addListener(this)
-        locationManager?.getLocation()
+        changeFragment(LocationPermissionFragment())
     }
 
-    override fun onLocationFound(location: Location) {
-        Timber.e("onLocation Found $location")
-    }
-
-    override fun onLocationNotFound(error: String?) {
-        Timber.e("location not found due to $error")
-    }
-
-    override fun onLocationPermissionNotGiven() {
-        Timber.e("Location permission not given")
-        requestPermissions(
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-            , LOCATION_PERMISSION_RC
-        )
-    }
-
-    override fun onLocationNameFound(name: String) {
-        Toast.makeText(this,"Current location : $name", Toast.LENGTH_LONG).show()
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        if (requestCode == LOCATION_PERMISSION_RC && grantResults[0] ==
-            PackageManager.PERMISSION_GRANTED
-        ) {
-            locationManager?.getLocation()
-        } else {
-            Toast.makeText(
-                this,
-                "You can't use the app without location permission",
-                Toast.LENGTH_LONG
-            ).show()
-            locationManager = null
-            finish()
-        }
+    fun changeFragment(fragment : Fragment){
+        supportFragmentManager.beginTransaction().replace(R.id.container,fragment).commit()
     }
 
 
