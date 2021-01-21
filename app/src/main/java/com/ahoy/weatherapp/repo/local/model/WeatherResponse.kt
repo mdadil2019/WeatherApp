@@ -4,6 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.text.SimpleDateFormat
+import kotlin.math.roundToInt
 
 @Entity
 data class WeatherResponse(
@@ -58,6 +59,12 @@ data class WeatherResponse(
         fun getTempInCelcius(): String{
             return (temp - ("273.15").toFloat()).toString()
         }
+
+        fun getHumidityInString(): String{
+            return "$humidity%"
+        }
+
+
     }
 
     data class Sys(
@@ -72,11 +79,21 @@ data class WeatherResponse(
     data class Wind(
         var deg: Int,
         var speed: Double
-    )
+
+
+    ){
+
+
+        fun getWindSpeedInString(): String{
+            return (speed.toFloat()).roundToInt().toString() + "Km/h"
+        }
+    }
 
     fun updateLastFetchedTime(){
         var dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         var formattedDate: String = dateFormat.format(System.currentTimeMillis())
         lastFetchedTime = formattedDate
     }
+
+
 }

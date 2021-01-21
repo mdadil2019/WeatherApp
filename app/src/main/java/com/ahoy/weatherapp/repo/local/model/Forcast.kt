@@ -63,5 +63,13 @@ data class Forcast(
     fun getWindSpeedInString(): String{
         return (wind_speed.toFloat()).roundToInt().toString() + "Km/h"
     }
+
+    fun getDateInDescription():String{
+        return "28 Jan 2021"
+    }
+
+    fun getForecastTime():String{
+        return "9 AM"
+    }
     
 }

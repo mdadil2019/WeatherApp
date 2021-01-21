@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="viewModel"
+            type="com.ahoy.weatherapp.viewmodel.HomeFragmentViewModel" />
+    </data>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="#71F2EB"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".fragments.HomeFragment">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottie_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="56dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lottie_autoPlay="true"
+                app:lottie_fileName="weatherstorm.json"
+                app:lottie_loop="true"
+                app:lottie_speed="1" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvWeatherForecast"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/tvWeatherDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@{viewModel.weatherResponse.weather.get(0).description}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lottie_layout" />
+
+            <TextView
+                android:id="@+id/tvTemprature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@{viewModel.weatherResponse.main.getTempInCelcius()}"
+                app:layout_constraintEnd_toEndOf="@+id/tvWeatherDescription"
+                app:layout_constraintStart_toStartOf="@+id/tvWeatherDescription"
+                app:layout_constraintTop_toBottomOf="@+id/tvWeatherDescription" />
+
+            <TextView
+                android:id="@+id/tvWindSpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
+                android:text="@{viewModel.weatherResponse.wind.getWindSpeedInString()}"
+                app:layout_constraintEnd_toStartOf="@+id/tvHumidity"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTemprature" />
+
+            <TextView
+                android:id="@+id/tvHumidity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@{viewModel.weatherResponse.main.getHumidityInString()}"
+                app:layout_constraintBottom_toBottomOf="@+id/tvWindSpeed"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tvWindSpeed"
+                app:layout_constraintTop_toTopOf="@+id/tvWindSpeed" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </FrameLayout>
+</layout>

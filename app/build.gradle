@@ -24,6 +24,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    dataBinding{
+        enabled = true
+        
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -34,6 +39,7 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     def room_version = "2.2.5"
 
 
@@ -66,4 +72,7 @@ dependencies {
 
     //Timber for loggin purpose
     implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    //Lottie for animation
+    implementation 'com.airbnb.android:lottie:3.4.0'
 }
