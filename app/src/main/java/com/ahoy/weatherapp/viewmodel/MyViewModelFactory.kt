@@ -1,4 +1,4 @@
-package com.ahoy.weatherapp
+package com.ahoy.weatherapp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

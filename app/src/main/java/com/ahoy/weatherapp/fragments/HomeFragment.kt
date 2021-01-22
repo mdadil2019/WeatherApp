@@ -1,5 +1,6 @@
 package com.ahoy.weatherapp.fragments
 
+import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,12 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.OrientationHelper.HORIZONTAL
 import androidx.recyclerview.widget.RecyclerView
-import com.ahoy.weatherapp.MyViewModelFactory
+import com.ahoy.weatherapp.viewmodel.MyViewModelFactory
 import com.ahoy.weatherapp.R
 import com.ahoy.weatherapp.databinding.FragmentHomeBinding
 import com.ahoy.weatherapp.repo.WeatherRepository
@@ -37,9 +37,12 @@ class HomeFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this,MyViewModelFactory(HomeFragmentViewModel::class) {
-            HomeFragmentViewModel(WeatherRepository(context!!, viewLifecycleOwner))
-        }).get(HomeFragmentViewModel::class.java)
+        viewModel = ViewModelProvider(this,
+            MyViewModelFactory(
+                HomeFragmentViewModel::class
+            ) {
+                HomeFragmentViewModel(WeatherRepository(context!!, viewLifecycleOwner))
+            }).get(HomeFragmentViewModel::class.java)
 
         binding.viewModel = viewModel
         rvWeatherForecast.layoutManager = LinearLayoutManager(context!!,RecyclerView.HORIZONTAL,false)
@@ -47,9 +50,18 @@ class HomeFragment : Fragment() {
 
         //TODO: Refactor static key
         arguments?.getParcelable<Location>("location")?.let {
+            Geocoder(context!!).getFromLocation(it.latitude,
+                it.longitude,2)?.first()?.locality?.let {
+                tvLocationName.text = it
+            }
+
             viewModel.fetchCurrentWeather(it)
             viewModel.fetchForecast(it)
         }
+
+        viewModel.temprature.observe(viewLifecycleOwner, Observer {
+            tvTemprature.text = it.getTemp()
+        })
 
     }
 

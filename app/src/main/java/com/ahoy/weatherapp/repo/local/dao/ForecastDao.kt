@@ -16,5 +16,8 @@ interface ForecastDao {
     @Query("SELECT * FROM Forcast ORDER BY dt LIMIT 7")
     fun getWeeklyForecast(): LiveData<List<Forcast>>
 
+    @Query("SELECT * FROM Forcast WHERE dt == :date")
+    fun getForecastOf(date : Long) : LiveData<Forcast>
+
 
 }

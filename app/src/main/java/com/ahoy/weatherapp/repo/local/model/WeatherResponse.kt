@@ -57,7 +57,7 @@ data class WeatherResponse(
         var temp_min: Double
     ){
         fun getTempInCelcius(): String{
-            return (temp - ("273.15").toFloat()).toString()
+            return (temp_max - ("273.15").toFloat()).roundToInt().toString() + "°C"
         }
 
         fun getHumidityInString(): String{

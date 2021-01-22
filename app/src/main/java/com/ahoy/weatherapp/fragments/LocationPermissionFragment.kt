@@ -10,14 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import com.ahoy.weatherapp.LocationListener
-import com.ahoy.weatherapp.LocationManager
-import com.ahoy.weatherapp.MainActivity
+import com.ahoy.weatherapp.locationmanager.LocationListener
+import com.ahoy.weatherapp.locationmanager.LocationManager
 import com.ahoy.weatherapp.R
 import kotlinx.android.synthetic.main.fragment_location_permission.*
 import timber.log.Timber
 
-class LocationPermissionFragment : Fragment(), LocationListener {
+class LocationPermissionFragment : Fragment(),
+    LocationListener {
     var locationManager: LocationManager? = null
 
     companion object {
@@ -45,7 +45,8 @@ class LocationPermissionFragment : Fragment(), LocationListener {
     }
 
     fun initLocationManager(){
-        locationManager = LocationManager(context!!)
+        locationManager =
+            LocationManager(context!!)
         locationManager?.addListener(this)
         locationManager?.getLocation()
     }

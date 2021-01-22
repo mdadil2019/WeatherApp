@@ -5,8 +5,10 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import com.ahoy.weatherapp.utils.DateTimeUtils
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
+import timber.log.Timber
 import kotlin.math.roundToInt
 
 @Parcelize
@@ -16,7 +18,7 @@ data class Forcast(
     var dew_point: Double,
 
     @PrimaryKey
-    var dt: Int,
+    var dt: Long,
 
 //    @Ignore
 //    var feels_like: FeelsLike,
@@ -54,6 +56,11 @@ data class Forcast(
             if(max == 0.0) return ""
             return (max - ("273.15").toFloat()).roundToInt().toString() + "°C"
         }
+
+        fun getMinTempCelcius():String{
+            if(min == 0.0) return ""
+            return (min - ("273.15").toFloat()).roundToInt().toString() + "°C"
+        }
     }
 
     fun getHumidityInString(): String{
@@ -65,7 +72,8 @@ data class Forcast(
     }
 
     fun getDateInDescription():String{
-        return "28 Jan 2021"
+        Timber.e("formatted : ${DateTimeUtils.getFormattedDate(dt)}")
+        return DateTimeUtils.getFormattedDate(dt)
     }
 
     fun getForecastTime():String{
