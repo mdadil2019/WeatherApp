@@ -43,6 +43,14 @@ class WeatherRepository(
         })
     }
 
+    fun getForecastForDay(date : Long, onSuccess: (Forcast) -> Unit){
+        db.forecastDao().getForecastOf(date).observe(lifecycleOwner, Observer {
+            if (it != null) {
+                onSuccess(it)
+            }
+        })
+    }
+
 
     suspend fun requestCurrentWeather(location: Location) {
         withContext(Dispatchers.IO) {

@@ -2,14 +2,15 @@ package com.ahoy.weatherapp.viewmodel
 
 import android.location.Location
 import androidx.databinding.ObservableField
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.ahoy.weatherapp.constants.Temprature
 import com.ahoy.weatherapp.adapter.ForecastAdapter
 import com.ahoy.weatherapp.repo.WeatherRepository
 import com.ahoy.weatherapp.repo.local.model.WeatherResponse
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 class HomeFragmentViewModel(
     private val weatherRepository : WeatherRepository
@@ -17,6 +18,7 @@ class HomeFragmentViewModel(
     val weatherResponse : ObservableField<WeatherResponse> = ObservableField()
 
     var forecastAdapter : ForecastAdapter = ForecastAdapter(emptyList())
+    var temprature : MutableLiveData<Temprature> = MutableLiveData()
 
     init {
         getCurrentWeather()
@@ -26,6 +28,7 @@ class HomeFragmentViewModel(
     private fun getCurrentWeather(){
         weatherRepository.getCurrentWeather {
             weatherResponse.set(it)
+            temprature.value = Temprature(valueInKelvin = it.main.temp.roundToInt())
         }
     }
 
@@ -45,6 +48,11 @@ class HomeFragmentViewModel(
         weatherRepository.getForecasts {
             forecastAdapter.addItems(it)
         }
+    }
+
+    fun onUnitChange(){
+        temprature.value!!.changeUnit()
+        temprature.postValue(temprature.value!!)
     }
 
 }

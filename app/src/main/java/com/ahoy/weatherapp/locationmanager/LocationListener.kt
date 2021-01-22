@@ -1,4 +1,4 @@
-package com.ahoy.weatherapp
+package com.ahoy.weatherapp.locationmanager
 
 import android.location.Location
 

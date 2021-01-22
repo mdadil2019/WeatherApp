@@ -6,6 +6,7 @@ import com.ahoy.weatherapp.R
 import com.ahoy.weatherapp.base.BaseRecyclerViewAdapter
 import com.ahoy.weatherapp.base.BaseViewHolder
 import com.ahoy.weatherapp.databinding.WeatherItemLayoutBinding
+import com.ahoy.weatherapp.fragments.DetailFragment
 import com.ahoy.weatherapp.repo.local.model.Forcast
 import kotlinx.android.synthetic.main.weather_item_layout.view.*
 
@@ -24,22 +25,20 @@ class ForecastAdapter(val forecasts: List<Forcast>) :
     private fun onBind(binding: WeatherItemLayoutBinding, forcast: Forcast) {
         binding.forecast = forcast
         binding.root.cvWeather.setOnClickListener {
-            showWeatherFragment(binding, forcast)
+            showDetailFragment(binding, forcast)
         }
 
     }
 
-    private fun showWeatherFragment(binding: WeatherItemLayoutBinding, forecast: Forcast) {
-//        val activity = binding.root.context as AppCompatActivity
-//        val weatherFragment = WeatherFragment()
-//        //add Object Data to fragment
-//        val args = Bundle()
-//        args.putParcelable("DATA_FORECAST", forecast)
-//        weatherFragment.arguments = args
-//
-//        activity.supportFragmentManager.beginTransaction()
-//            .replace(R.id.fragmentContainer, weatherFragment).addToBackStack("backstack").commit()
-
+    private fun showDetailFragment(binding: WeatherItemLayoutBinding, forecast: Forcast) {
+        val activity = binding.root.context as AppCompatActivity
+        DetailFragment().apply {
+            val args = Bundle()
+            args.putLong("forecast_selected_item_date", forecast.dt)
+            arguments = args
+            activity.supportFragmentManager.beginTransaction()
+                .replace(R.id.container, this).addToBackStack("").commit()
+        }
     }
 
     override fun getLayoutId(): Int = R.layout.weather_item_layout
