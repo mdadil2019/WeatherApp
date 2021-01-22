@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="forecast"
+            type="com.ahoy.weatherapp.repo.local.model.Forcast" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/tvDayName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/textColorForBlackBackground"
+            android:textStyle="bold"
+            android:text="@{forecast.getDateInDescription()}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvMaxTemp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="80dp"
+            android:text="@{forecast.temp.getTempInCelcius()}"
+            android:textColor="@color/textColorForBlackBackground"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/tvDayName"
+            app:layout_constraintStart_toEndOf="@+id/tvDayName"
+            app:layout_constraintTop_toTopOf="@+id/tvDayName"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/tvMinTemp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="52dp"
+            android:textColor="@color/textColorForBlackBackground"
+            android:text="@{forecast.temp.getMinTempCelcius()}"
+            app:layout_constraintBottom_toBottomOf="@+id/tvMaxTemp"
+            app:layout_constraintStart_toEndOf="@+id/tvMaxTemp"
+            app:layout_constraintTop_toTopOf="@+id/tvMaxTemp"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <ImageView
+            android:id="@+id/ivCloudIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="92dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvMinTemp"
+            app:layout_constraintStart_toEndOf="@+id/tvMinTemp"
+            app:layout_constraintTop_toTopOf="@+id/tvMinTemp"
+            app:layout_constraintVertical_bias="0.578" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.ahoy.weatherapp.viewmodel.DetailFragmentViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#2E3341"
+        tools:context=".fragments.DetailFragment"
+        android:padding="20dp">
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="44dp"
+            android:background="@drawable/ic_descriptioncontainer"
+            android:padding="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tvLastFetchTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Forecast" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvLastFetchTime"
+                android:text="@{viewModel.description}"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:textColor="#A4A6AC"
+                android:textSize="16sp"/>
+        </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvDetailForecast"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="88dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
+            app:layout_constraintVertical_bias="0.13"
+            tools:layout_editor_absoluteX="24dp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="Next Week"
+            android:textColor="@color/textColorForBlackBackground"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/rvDetailForecast"
+            app:layout_constraintStart_toStartOf="@+id/rvDetailForecast" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
