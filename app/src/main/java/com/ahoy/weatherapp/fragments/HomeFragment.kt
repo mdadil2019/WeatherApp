@@ -14,15 +14,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ahoy.weatherapp.viewmodel.MyViewModelFactory
 import com.ahoy.weatherapp.R
+import com.ahoy.weatherapp.adapter.ForecastAdapter
+import com.ahoy.weatherapp.constants.Temprature
 import com.ahoy.weatherapp.databinding.FragmentHomeBinding
 import com.ahoy.weatherapp.repo.WeatherRepository
 import com.ahoy.weatherapp.viewmodel.HomeFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlin.math.roundToInt
 
 class HomeFragment : Fragment() {
 
     private lateinit var viewModel: HomeFragmentViewModel
     private lateinit var binding : FragmentHomeBinding
+    var forecastAdapter : ForecastAdapter = ForecastAdapter(emptyList())
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -41,28 +46,52 @@ class HomeFragment : Fragment() {
             MyViewModelFactory(
                 HomeFragmentViewModel::class
             ) {
-                HomeFragmentViewModel(WeatherRepository(context!!, viewLifecycleOwner))
+                HomeFragmentViewModel(WeatherRepository(activity!!.applicationContext))
             }).get(HomeFragmentViewModel::class.java)
 
         binding.viewModel = viewModel
-        rvWeatherForecast.layoutManager = LinearLayoutManager(context!!,RecyclerView.HORIZONTAL,false)
-        rvWeatherForecast.adapter = viewModel.forecastAdapter
-
+        setupAdapter()
         //TODO: Refactor static key
-        arguments?.getParcelable<Location>("location")?.let {
-            Geocoder(context!!).getFromLocation(it.latitude,
-                it.longitude,2)?.first()?.locality?.let {
-                tvLocationName.text = it
-            }
-
-            viewModel.fetchCurrentWeather(it)
-            viewModel.fetchForecast(it)
-        }
+        getUserLocation()
 
         viewModel.temprature.observe(viewLifecycleOwner, Observer {
             tvTemprature.text = it.getTemp()
         })
 
+        viewModel.observeCurrentWeather().observe(viewLifecycleOwner, Observer {
+            viewModel.weatherResponse.set(it)
+            viewModel.temprature.value = Temprature(valueInKelvin = it.main.temp.roundToInt())
+        })
+
+
+
+    }
+
+    private fun getUserLocation() {
+        arguments?.getParcelable<Location>("location")?.let {
+            updateLocationName(it)
+            viewModel.fetchCurrentWeather(it)
+            viewModel.fetchForecast(it)
+        }
+    }
+
+    private fun updateLocationName(it: Location) {
+        Geocoder(context!!).getFromLocation(it.latitude,
+                it.longitude, 2)?.first()?.locality?.let {
+            tvLocationName.text = it
+        }
+    }
+
+    private fun setupAdapter() {
+        rvWeatherForecast.layoutManager = LinearLayoutManager(context!!, RecyclerView.HORIZONTAL, false)
+        rvWeatherForecast.adapter = forecastAdapter
+        observeForecast()
+    }
+
+    private fun observeForecast() {
+        viewModel.observeForecast().observe(viewLifecycleOwner, Observer {
+            forecastAdapter.addItems(it)
+        })
     }
 
 }

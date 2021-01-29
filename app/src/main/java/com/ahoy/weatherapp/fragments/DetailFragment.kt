@@ -6,11 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ahoy.weatherapp.viewmodel.MyViewModelFactory
 import com.ahoy.weatherapp.R
+import com.ahoy.weatherapp.adapter.DetailForecastAdapter
 import com.ahoy.weatherapp.databinding.FragmentDetailBinding
 import com.ahoy.weatherapp.repo.WeatherRepository
 import com.ahoy.weatherapp.viewmodel.DetailFragmentViewModel
@@ -20,6 +22,8 @@ class DetailFragment : Fragment() {
 
     lateinit var viewModel : DetailFragmentViewModel
     lateinit var binding : FragmentDetailBinding
+    var detailForecastAdapter : DetailForecastAdapter = DetailForecastAdapter(emptyList())
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,17 +40,38 @@ class DetailFragment : Fragment() {
             MyViewModelFactory(
                 DetailFragmentViewModel::class
             ) {
-                DetailFragmentViewModel(WeatherRepository(context!!, viewLifecycleOwner))
+                DetailFragmentViewModel(WeatherRepository(activity!!.applicationContext))
             }).get(DetailFragmentViewModel::class.java)
 
         binding.viewModel = viewModel
-        rvDetailForecast.layoutManager = LinearLayoutManager(context!!,
-            RecyclerView.VERTICAL,false)
-        rvDetailForecast.adapter = viewModel.detailForecastAdapter
+        setupAdapter()
+        getSelectedDate()
 
-        arguments?.getLong("forecast_selected_item_date")?.let {
-            viewModel.getForecastOfDay(it)
-            viewModel.getForecast()
+    }
+
+    private fun getSelectedDate() {
+        arguments?.getLong("forecast_selected_item_date")?.let { date ->
+            observeWeatherDescription(date)
         }
+    }
+
+    private fun observeWeatherDescription(date: Long) {
+        viewModel.observerForecastOfTheDay(date).observe(viewLifecycleOwner, Observer {
+            viewModel.description.set("The wind speed is ${it.getWindSpeedInString()} and the humidity is ${it.getHumidityInString()}. " +
+                    "The weather seems ${it.weather[0].description}")
+        })
+    }
+
+    private fun setupAdapter() {
+        rvDetailForecast.layoutManager = LinearLayoutManager(context!!,
+                RecyclerView.VERTICAL, false)
+        rvDetailForecast.adapter = detailForecastAdapter
+        observeForecast()
+    }
+
+    private fun observeForecast() {
+        viewModel.observerForecast().observe(viewLifecycleOwner, Observer {
+            detailForecastAdapter.addItems(it)
+        })
     }
 }
