@@ -4,6 +4,7 @@ import android.content.Context
 import android.location.Location
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.ahoy.weatherapp.repo.local.WeatherHuntDatabase
 import com.ahoy.weatherapp.repo.local.model.Forcast
@@ -16,8 +17,7 @@ import java.io.File
 import java.security.acl.Owner
 
 class WeatherRepository(
-    private val context: Context,
-    private val lifecycleOwner: LifecycleOwner
+    context: Context
 ) {
     private val db = WeatherHuntDatabase.getInstance(context)
 
@@ -35,22 +35,9 @@ class WeatherRepository(
         }
     }
 
-    fun getForecasts(onSuccess: (List<Forcast>) -> Unit) {
-        db.forecastDao().getWeeklyForecast().observe(lifecycleOwner, Observer {
-            if (it.isNotEmpty()) {
-                onSuccess(it)
-            }
-        })
-    }
+    fun getForecasts() : LiveData<List<Forcast>> = db.forecastDao().getWeeklyForecast()
 
-    fun getForecastForDay(date : Long, onSuccess: (Forcast) -> Unit){
-        db.forecastDao().getForecastOf(date).observe(lifecycleOwner, Observer {
-            if (it != null) {
-                onSuccess(it)
-            }
-        })
-    }
-
+    fun getForecastForDay(date : Long): LiveData<Forcast> = db.forecastDao().getForecastOf(date)
 
     suspend fun requestCurrentWeather(location: Location) {
         withContext(Dispatchers.IO) {
@@ -63,12 +50,7 @@ class WeatherRepository(
         }
     }
 
-    fun getCurrentWeather(onSuccess: (WeatherResponse) -> Unit) {
-        db.currentWeatherDao().getCurrentWeather().observe(lifecycleOwner, Observer {
-            if(it != null){
-                onSuccess(it)
-            }
-        })
-    }
+    fun getCurrentWeather():LiveData<WeatherResponse> = db.currentWeatherDao().getCurrentWeather()
+
 
 }
