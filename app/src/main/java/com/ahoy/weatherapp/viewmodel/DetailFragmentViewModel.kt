@@ -2,6 +2,7 @@ package com.ahoy.weatherapp.viewmodel
 
 import android.location.Location
 import androidx.databinding.ObservableField
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,7 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-class DetailFragmentViewModel(
+class DetailFragmentViewModel @ViewModelInject constructor(
     private var weatherRepository : WeatherRepository
 ) : ViewModel() {
     var description : ObservableField<String> = ObservableField()

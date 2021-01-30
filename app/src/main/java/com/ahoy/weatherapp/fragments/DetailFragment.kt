@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,11 +17,13 @@ import com.ahoy.weatherapp.adapter.DetailForecastAdapter
 import com.ahoy.weatherapp.databinding.FragmentDetailBinding
 import com.ahoy.weatherapp.repo.WeatherRepository
 import com.ahoy.weatherapp.viewmodel.DetailFragmentViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_detail.*
 
+@AndroidEntryPoint
 class DetailFragment : Fragment() {
 
-    lateinit var viewModel : DetailFragmentViewModel
+    private val viewModel : DetailFragmentViewModel by viewModels()
     lateinit var binding : FragmentDetailBinding
     var detailForecastAdapter : DetailForecastAdapter = DetailForecastAdapter(emptyList())
 
@@ -36,13 +39,6 @@ class DetailFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this,
-            MyViewModelFactory(
-                DetailFragmentViewModel::class
-            ) {
-                DetailFragmentViewModel(WeatherRepository(activity!!.applicationContext))
-            }).get(DetailFragmentViewModel::class.java)
-
         binding.viewModel = viewModel
         setupAdapter()
         getSelectedDate()
@@ -63,8 +59,9 @@ class DetailFragment : Fragment() {
     }
 
     private fun setupAdapter() {
-        rvDetailForecast.layoutManager = LinearLayoutManager(context!!,
+        rvDetailForecast.layoutManager = LinearLayoutManager(context,
                 RecyclerView.VERTICAL, false)
+
         rvDetailForecast.adapter = detailForecastAdapter
         observeForecast()
     }

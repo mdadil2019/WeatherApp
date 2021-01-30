@@ -2,6 +2,7 @@ package com.ahoy.weatherapp.viewmodel
 
 import android.location.Location
 import androidx.databinding.ObservableField
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,7 +15,7 @@ import com.ahoy.weatherapp.repo.local.model.WeatherResponse
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-class HomeFragmentViewModel(
+class HomeFragmentViewModel  @ViewModelInject constructor(
     private val weatherRepository : WeatherRepository
 ) : ViewModel() {
     val weatherResponse : ObservableField<WeatherResponse> = ObservableField()
