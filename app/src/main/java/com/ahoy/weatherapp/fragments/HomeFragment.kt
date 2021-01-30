@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,16 +16,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ahoy.weatherapp.viewmodel.MyViewModelFactory
 import com.ahoy.weatherapp.R
 import com.ahoy.weatherapp.adapter.ForecastAdapter
+import com.ahoy.weatherapp.callbacks.CardSelectionListener
 import com.ahoy.weatherapp.constants.Temprature
 import com.ahoy.weatherapp.databinding.FragmentHomeBinding
 import com.ahoy.weatherapp.repo.WeatherRepository
 import com.ahoy.weatherapp.viewmodel.HomeFragmentViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlin.math.roundToInt
 
-class HomeFragment : Fragment() {
+@AndroidEntryPoint
+class HomeFragment : Fragment(), CardSelectionListener {
 
-    private lateinit var viewModel: HomeFragmentViewModel
+     private val viewModel: HomeFragmentViewModel by viewModels()
     private lateinit var binding : FragmentHomeBinding
     var forecastAdapter : ForecastAdapter = ForecastAdapter(emptyList())
 
@@ -42,13 +46,6 @@ class HomeFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this,
-            MyViewModelFactory(
-                HomeFragmentViewModel::class
-            ) {
-                HomeFragmentViewModel(WeatherRepository(activity!!.applicationContext))
-            }).get(HomeFragmentViewModel::class.java)
-
         binding.viewModel = viewModel
         setupAdapter()
         //TODO: Refactor static key
@@ -76,14 +73,15 @@ class HomeFragment : Fragment() {
     }
 
     private fun updateLocationName(it: Location) {
-        Geocoder(context!!).getFromLocation(it.latitude,
+        Geocoder(context).getFromLocation(it.latitude,
                 it.longitude, 2)?.first()?.locality?.let {
             tvLocationName.text = it
         }
     }
 
     private fun setupAdapter() {
-        rvWeatherForecast.layoutManager = LinearLayoutManager(context!!, RecyclerView.HORIZONTAL, false)
+        rvWeatherForecast.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+        forecastAdapter.addListener(this)
         rvWeatherForecast.adapter = forecastAdapter
         observeForecast()
     }
@@ -92,6 +90,17 @@ class HomeFragment : Fragment() {
         viewModel.observeForecast().observe(viewLifecycleOwner, Observer {
             forecastAdapter.addItems(it)
         })
+    }
+
+
+    override fun onItemSelected(date: Long) {
+        DetailFragment().apply {
+            val args = Bundle()
+            args.putLong("forecast_selected_item_date",date)
+            arguments = args
+            this@HomeFragment.activity!!.supportFragmentManager.beginTransaction()
+                .replace(R.id.container, this).addToBackStack("")?.commit()
+        }
     }
 
 }

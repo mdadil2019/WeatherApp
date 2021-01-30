@@ -10,8 +10,10 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.ahoy.weatherapp.fragments.HomeFragment
 import com.ahoy.weatherapp.fragments.LocationPermissionFragment
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
